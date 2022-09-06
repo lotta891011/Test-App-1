@@ -33,22 +33,26 @@ class MainActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val textView : TextView = findViewById(R.id.textView)
 
+        //init of view elements
+        val textView : TextView = findViewById(R.id.textView)
         val email : TextView = findViewById(R.id.emailText)
         val password : TextView = findViewById(R.id.passwordText)
-
-
         val apiBtn : Button = findViewById(R.id.button)
 
+        //retrofit 2 request
         val response = ServiceBuilder.buildService(ApiInterface::class.java)
         response.sendReq2().enqueue(
             object : Callback<ResponseModel2> {
+                //overriding response function of retrofit
                 override fun onResponse(
                     call: Call<ResponseModel2>,
                     response: retrofit2.Response<ResponseModel2>
                 ) {
+                    //variable that makes it easier to have access to token
                     val res = response.body()?.support?.text.toString()
+
+                    //click listener inside of request -> allows to send response via Intent
                     apiBtn.setOnClickListener {
                         if (emailText != null){
                             emailText = email.text.toString()
@@ -65,6 +69,7 @@ class MainActivity: AppCompatActivity() {
                     }
 
                 }
+                //overriding failure function of retrofit
                 override fun onFailure(call: Call<ResponseModel2>, t: Throwable) {
                     Toast.makeText(this@MainActivity, t.toString(), Toast.LENGTH_LONG).show()
                 }
